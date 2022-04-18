@@ -164,9 +164,8 @@ export default {
         "TK": "Tool Kits/Sets",
         "TL": "Lighting and Illumination",
         "TM": "Musical Instruments",
-        "TN": "Navigational Aids",
+        "TN": "Navigational and Timekeeping Aids",
         "TS": "Storage and Transport",
-        "TT": "Timekeeping Tools",
 
     // U currently unassigned.
 

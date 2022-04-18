@@ -120,7 +120,7 @@ let gear = [
     new Ware('Hammer, sledge','150').sell(2).lb(10).classify('T'),
     new Ware('Holy water','150').sell(GP(25).measure('flask')).lb(1).classify('MP'),
     new Ware("Healer's Kit","150").sell(5).lb(3).classify("TK"),
-    new Ware('Hourglass','150').sell(25).lb(1).classify('TT'),
+    new Ware('Hourglass','150').sell(25).lb(1).classify('TN'),
     new Ware('Hunting trap','150').sell(5).lb(25).classify('ZT'),
     new Ware('Ink','150').sell(GP(10).measure('oz.')).classify('TC'),
     new Ware('Ink pen','150').sell(CP(2)).classify('TC'),
