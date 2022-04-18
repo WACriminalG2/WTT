@@ -1,3 +1,5 @@
+// Player's Handbook, Wizards of the Coast -- no content is intentionally included outside the game's SRD.
+
 import {Armor, Shield, Sourcebook, Ware, Weapon, CP,SP,EP,GP,PP, Roll} from './core';
 
 // PHB construction
