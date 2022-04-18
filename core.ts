@@ -279,6 +279,11 @@ export class Price {
         return this;
     }
 
+    variable() : this {
+        this.Variable = true;
+        return this;
+    }
+
     high(p:Price) : this {
         this.High = p;
         return this;
@@ -339,10 +344,10 @@ export class Roll {
         if(mod){this.mod = mod};
         if(mult){this.multiplier = mult};
         if(adv){
-            if(adv = 'Advantage') {
+            if(adv === 'Advantage') {
                 this.adv = true;
             }
-            if(adv = 'Disadvantage') {
+            if(adv === 'Disadvantage') {
                 this.disadv = true;
             }
         }
@@ -402,6 +407,33 @@ export class Roll {
     MULTIPLY (m:number) : this {
         this.multiplier = m;
         return this;
+    }
+
+    out() : string {
+        let arr : string[] = [];
+        if (this.d4 != 0) {arr.push(this.d4.toString()+"d4")};
+        if (this.d6 != 0) {arr.push(this.d6.toString()+"d6")};
+        if (this.d8 != 0) {arr.push(this.d8.toString()+"d8")};
+        if (this.d10 != 0) {arr.push(this.d10.toString()+"d10")};
+        if (this.d12 != 0) {arr.push(this.d12.toString()+"d12")};
+        if (this.d20 != 0) {arr.push(this.d20.toString()+"d20")};
+        if (this.d100 != 0) {arr.push(this.d100.toString()+"d100")};
+        if (this.mod != 0) {arr.push(this.mod.toString())};
+
+        let V : string = '';
+        if (this.adv) {V = ' w/ advantage'}
+        if (this.disadv) {V = ' w/ disadvantage'}
+        if (this.adv === this.disadv) {V = ''}
+
+        let M : string = '';
+        if (this.multiplier != 1) {M = ', x'+this.multiplier}
+
+        let S : string = arr.join(' + ');
+        S = S.replace(`+ -`,'- ');
+        S += V;
+        S += M;
+
+        return S;
     }
 
     // Methods still needed: toString(), result(), keep()
@@ -851,3 +883,8 @@ export class Generator {
 export class RandomTable {
 
 }
+
+let test = new Roll(1,2,3,4,5,-6,7,8,'Advantage',1.5);
+console.log(JSON.stringify(test));
+console.log(test.out());
+console.log(JSON.stringify(test))
