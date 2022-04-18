@@ -12,6 +12,8 @@ export type DamageType = 'Acid' | 'Bludgeoning' | 'Cold' | 'Fire' | 'Force' | 'L
 export type DiceRoll = `${number}d${number}`;
 export type WTTclass = `${'M'|''}${keyof typeof WTT}`;
 
+
+// Text types for item descriptions, etc.
 export type Paragraph = {type:'Paragraph',content:string};
 export type TextList = {type:'UnorderedList'|'OrderedList',content:string[]};
 export type TextSubheading = {type:'Subheading',content:string};
