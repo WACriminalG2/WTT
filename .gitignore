@@ -1,0 +1,12 @@
+node_modules
+sourcebooks
+components
+*.js
+*.html
+*.json
+out/
+roadmap.txt
+*.css
+preload.ts
+index.ts
+main.ts
