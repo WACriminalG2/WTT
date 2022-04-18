@@ -11,3 +11,10 @@ export type CreatureSize = 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gar
 export type DamageType = 'Acid' | 'Bludgeoning' | 'Cold' | 'Fire' | 'Force' | 'Lightning' | 'Necrotic' | 'Piercing' | 'Poison' | 'Psychic' | 'Radiant' | 'Slashing' | 'Thunder';
 export type DiceRoll = `${number}d${number}`;
 export type WTTclass = `${'M'|''}${keyof typeof WTT}`;
+
+export type Paragraph = {type:'Paragraph',content:string};
+export type TextList = {type:'UnorderedList'|'OrderedList',content:string[]};
+export type TextSubheading = {type:'Subheading',content:string};
+
+
+export type TextBlock = Paragraph | TextSubheading | TextList

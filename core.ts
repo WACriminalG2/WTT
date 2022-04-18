@@ -1,4 +1,4 @@
-import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Rarity, Skill, WTTclass} from './types';
+import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Rarity, Skill, TextBlock, WTTclass} from './types';
 import * as fs from 'fs';
 import wtt from './wtt';
 
@@ -12,7 +12,7 @@ export class Sourcebook {
     Description: string;
     Wares?: Ware[];
 
-    // Content types not yet implemented 
+    // Content types which may eventually be included, but not yet implemented 
 
     CharClasses?: Array<any>;
     SubClasses?: Array<any>;
@@ -27,6 +27,7 @@ export class Sourcebook {
     Rules?: Array<any>;
     Generators?: Generator[];
     RandomTables?: RandomTable[];
+    Trinkets?: Array<any>;
     
 
     constructor(t: string,s: string) {
@@ -95,7 +96,7 @@ export class Sourcebook {
 
 export class Ware {
     Name: string;
-    Description: string;
+    Description: TextBlock[];
     Classifications: WTTclass[]; //[AC420.69,BR549]
     Category: 'Service' | 'Object' | 'Creature' ;
     Prices?: Price[];
@@ -116,7 +117,7 @@ export class Ware {
 
     constructor(n: string,p: string) {
         this.Name = n;
-        this.Description = "";
+        this.Description = [];
         this.Classifications = [];
         this.Category = 'Object';
         this.Prices = [];
@@ -124,7 +125,7 @@ export class Ware {
     };
 
     desc(d: string) : this {
-        this.Description = d;
+        this.Description.push({type:'Paragraph',content:d});
         return this;
     };
 
@@ -234,7 +235,10 @@ export class Price {
     ep: number = 0;
     gp: number = 0;
     pp: number = 0;
-    Measure: string = ""; // 1 lb; 3 oz; 5; 1 hr; 20 ft
+    Measure: string = ""; // 1 hr; 20 ft; 1 week
+    Variable: boolean = false; // Whether the item's price is consistent or variable
+    High?: Price; // If the item has a variable price, this is the high end of its price range.
+    Low?: Price; // If the item has a variable price, this is the low end of its price range. 
 
     constructor(c: number, s: number, e: number, g: number, p: number) {
         this.cp = c;
@@ -242,6 +246,7 @@ export class Price {
         this.ep = e;
         this.gp = g;
         this.pp = p;
+        this.Variable = false;
     }
 
     CP(n:number) : this {
@@ -271,6 +276,16 @@ export class Price {
 
     measure(m:string) : Price {
         this.Measure = m;
+        return this;
+    }
+
+    high(p:Price) : this {
+        this.High = p;
+        return this;
+    }
+
+    low(p:Price) : this {
+        this.Low = p;
         return this;
     }
 

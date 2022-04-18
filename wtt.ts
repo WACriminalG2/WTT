@@ -94,12 +94,14 @@ export default {
 
     // J currently unassigned.
 
-    // K designated as meta-classification for trinket items which otherwise fit in other categories.
+    // K currently unassigned.
 
     "L": "Land and Construction",
+        "LC": "Commercial Property",
         "LE": "Empty Land",
+        "LR": "Residential Property",
 
-    // M designated as meta-classification for magic items which otherwise fit in other categories.
+    // M designated as meta-classification for magic items which would otherwise fit in other categories.
 
     // N currently unassigned.
 
