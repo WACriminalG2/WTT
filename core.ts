@@ -452,44 +452,67 @@ export class Roll {
     }
 
     result(mode?: 'detail') : number | number[] {
+        
         let pool = this.pool();
         if (pool === 'A') {
             let first  =  <number[]> this.roll('detail');
             let second =  <number[]> this.roll('detail');
+            let multfirst = [];
+            let multsecond = [];
 
-            let f : number = 0;
-            first.forEach((a) => {f += a});
+            let f : number = this.mod;
+            first.forEach((a) => {f += a * this.multiplier; multfirst.push(a*this.multiplier)});
 
-            let s : number = 0;
-            second.forEach((a) => {s += a})
+            let s : number = this.mod;
+            second.forEach((a) => {s += a * this.multiplier; multsecond.push(a*this.multiplier)})
+
+            multfirst.push(this.mod);
+            multsecond.push(this.mod);
 
             if (f > s) {
-                if (mode === 'detail') {return first} else {return f}
+                if (mode === 'detail') {return multfirst} else {return f}
             }
             else {
-                if (mode === 'detail') {return second} else {return s}
+                if (mode === 'detail') {return multsecond} else {return s}
             }
             
         }
         else if (pool === 'D') {
             let first  =  <number[]> this.roll('detail');
             let second =  <number[]> this.roll('detail');
+            let multfirst = [];
+            let multsecond = [];
             
-            let f : number = 0;
-            first.forEach((a) => {f += a});
+            let f : number = this.mod;
+            first.forEach((a) => {f += a * this.multiplier; multfirst.push(a*this.multiplier)});
 
-            let s : number = 0;
-            second.forEach((a) => {s += a})
+            let s : number = this.mod;
+            second.forEach((a) => {s += a * this.multiplier; multsecond.push(a*this.multiplier)})
+
+            multfirst.push(this.mod);
+            multsecond.push(this.mod);
 
             if (f < s) {
-                if (mode === 'detail') {return first} else {return f}
+                if (mode === 'detail') {return multfirst} else {return f}
             }
             else {
-                if (mode === 'detail') {return second} else {return s}
+                if (mode === 'detail') {return multsecond} else {return s}
             }
         }
         else {
-            if (mode === 'detail') {return this.roll('detail')} else {return this.roll()}
+            if (mode === 'detail') {
+                let first = <number[]> this.roll('detail');
+                let multfirst = [];
+
+                first.forEach((a) => {multfirst.push(a*this.multiplier)});
+                multfirst.push(this.mod);
+                return multfirst;
+            } else {
+                let first = <number> this.roll();
+                first *= this.multiplier;
+                first += this.mod;
+                return first;
+            }
         }
     }
 
