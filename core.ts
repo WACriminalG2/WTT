@@ -1,6 +1,7 @@
-import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Rarity, Skill, TextBlock, WTTclass} from './types';
+import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
 import * as fs from 'fs';
 import wtt from './wtt';
+import { randomInt } from 'crypto';
 
 // Primary classes
 export class Sourcebook {
@@ -9,6 +10,7 @@ export class Sourcebook {
     Shortform: string; //PHB
     Ruleset: '5e';
     Version: string; // v1.0
+    URL?: string;
     Description: string;
     Wares?: Ware[];
 
@@ -84,7 +86,7 @@ export class Sourcebook {
     }
 
     write() : void {
-        fs.writeFile('./sourcebooks/'+this.Shortform+'.json',JSON.stringify(this),(() => {}))
+        fs.writeFile('./sourcebooks/'+this.Title+'.json',JSON.stringify(this),(() => {}))
     }
 
     read(s:string,confirmation:"Yes I'm sure") : this {
@@ -96,17 +98,18 @@ export class Sourcebook {
 
 export class Ware {
     Name: string;
-    Description: TextBlock[];
-    Classifications: WTTclass[]; //[AC420.69,BR549]
-    Category: 'Service' | 'Object' | 'Creature' ;
-    Prices?: Price[];
+    Description?: TextBlock[] = [];
+    Lore?: TextBlock[] = [];
+    Classifications: WTTclass[] = []; //[AC420.69,BR549]
+    Category: 'Service' | 'Object' | 'Creature' = 'Object';
+    Prices?: Price[] = [];
     PriceModifiers?: PriceModifier[];
     Rarity?: Rarity;
-    Page: string; // 38, XI, V2p28, NA
+    Page: string = ''; // 38, XI, V2p28, NA
     Weight?: number;
     WeightMeasure: string = "";
-    Advantages?: string[] = [];
-    Disadvantages?: string[] = [];
+    Advantages?: string[] = []; // List of roll types granted advantage to the user of this item.
+    Disadvantages?: string[] = []; // List of roll types granted disadvantage to the user of this item.
     Consumable: boolean = false;
     // Needs an Attunement property.
     // Needs an Icon property, could possibly be used for report grouping?
@@ -117,10 +120,6 @@ export class Ware {
 
     constructor(n: string,p: string) {
         this.Name = n;
-        this.Description = [];
-        this.Classifications = [];
-        this.Category = 'Object';
-        this.Prices = [];
         this.Page = p;
     };
 
@@ -128,6 +127,16 @@ export class Ware {
         this.Description.push({type:'Paragraph',content:d});
         return this;
     };
+
+    lore(l: string | string[], t?: 'Paragraph' | 'UnorderedList' | 'OrderedList' | 'Subheading') : this {
+        
+        if (t === 'UnorderedList' && l instanceof Array) {this.Lore.push({type:t,content:l})}
+        else if (t === 'OrderedList' && l instanceof Array) {this.Lore.push({type:t,content:l})}
+        else if (t === 'Subheading' && l instanceof String) {this.Lore.push({type:'Subheading',content: <string> l})}
+        else {this.Lore.push({type:'Paragraph',content:<string> l})}
+        
+        return this;
+    }
 
     classify(...c: WTTclass[]) : this {
         c.forEach((s) => {
@@ -226,7 +235,6 @@ export class Ware {
     citation() : string {
         return this.Shortform + this.Page;
     }
-
 }
 
 export class Price {
@@ -436,7 +444,122 @@ export class Roll {
         return S;
     }
 
-    // Methods still needed: toString(), result(), keep()
+    pool() : 'D' | 'A' | 'Standard' { 
+        // Determines whether the roll is at advantage or disadvantage. Helper method for result().
+        if (this.adv === this.disadv) {return 'Standard'}
+        else if (this.adv) {return 'A'}
+        else if (this.disadv) {return 'D'}
+    }
+
+    result(mode?: 'detail') : number | number[] {
+        let pool = this.pool();
+        if (pool === 'A') {
+            let first  =  <number[]> this.roll('detail');
+            let second =  <number[]> this.roll('detail');
+
+            let f : number = 0;
+            first.forEach((a) => {f += a});
+
+            let s : number = 0;
+            second.forEach((a) => {s += a})
+
+            if (f > s) {
+                if (mode === 'detail') {return first} else {return f}
+            }
+            else {
+                if (mode === 'detail') {return second} else {return s}
+            }
+            
+        }
+        else if (pool === 'D') {
+            let first  =  <number[]> this.roll('detail');
+            let second =  <number[]> this.roll('detail');
+            
+            let f : number = 0;
+            first.forEach((a) => {f += a});
+
+            let s : number = 0;
+            second.forEach((a) => {s += a})
+
+            if (f < s) {
+                if (mode === 'detail') {return first} else {return f}
+            }
+            else {
+                if (mode === 'detail') {return second} else {return s}
+            }
+        }
+        else {
+            if (mode === 'detail') {return this.roll('detail')} else {return this.roll()}
+        }
+    }
+
+    roll(mode?:'detail') : number | number[] {
+
+        // This method does NOT take into account advantage, mods, or multipliers. For those, use result().
+        const adds : number[] = [];
+        let subs : number[] = [];
+        
+        if (this.d4 > 0) {
+            for (let i=0; i<this.d4;i++) {adds.push(randomInt(1,5))};
+        } else {
+            for (let i=0; i<this.d4*-1;i++) {subs.push(randomInt(1,5))}
+        }
+
+        if (this.d6 > 0) {
+            for (let i=0; i<this.d6;i++) {adds.push(randomInt(1,7))};
+        } else {
+            for (let i=0; i<this.d6*-1;i++) {subs.push(randomInt(1,7))}
+        }
+
+        if (this.d8 > 0) {
+            for (let i=0; i<this.d8;i++) {adds.push(randomInt(1,9))};
+        } else {
+            for (let i=0; i<this.d8*-1;i++) {subs.push(randomInt(1,9))}
+        }
+
+        if (this.d10 > 0) {
+            for (let i=0; i<this.d10;i++) {adds.push(randomInt(1,11))};
+        } else {
+            for (let i=0; i<this.d10*-1;i++) {subs.push(randomInt(1,11))}
+        }
+
+        if (this.d12 > 0) {
+            for (let i=0; i<this.d12;i++) {adds.push(randomInt(1,13))};
+        } else {
+            for (let i=0; i<this.d12*-1;i++) {subs.push(randomInt(1,13))}
+        }
+
+        if (this.d20 > 0) {
+            for (let i=0; i<this.d20;i++) {adds.push(randomInt(1,21))};
+        } else {
+            for (let i=0; i<this.d20*-1;i++) {subs.push(randomInt(1,21))}
+        }
+
+        if (this.d100 > 0) {
+            for (let i=0; i<this.d100;i++) {adds.push(randomInt(1,101))};
+        } else {
+            for (let i=0; i<this.d100*-1;i++) {subs.push(randomInt(1,101))}
+        }
+
+        // Get simple number;
+
+        let r = 0;
+        adds.forEach((a) => {r += a});
+        subs.forEach((s) => {r += s * -1});
+
+        // Return roll 
+
+        if (mode === 'detail') {
+            let combo = [];
+            adds.forEach((a) => {combo.push(a)});
+            subs.forEach((s) => {combo.push(s*-1)});
+            return combo;
+        } else {
+            return r;
+        }
+    }
+
+    // Methods still needed: keep()
 }
 
 // Ware sub-classes
@@ -885,6 +1008,6 @@ export class RandomTable {
 }
 
 let test = new Roll(1,2,3,4,5,-6,7,8,'Advantage',1.5);
-console.log(JSON.stringify(test));
-console.log(test.out());
-console.log(JSON.stringify(test))
+console.log(test.result('detail'));
+console.log(test.result())
+
