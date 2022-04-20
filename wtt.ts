@@ -198,7 +198,8 @@ export default {
         "WX": "Axes",
         "WZ": "Placeholder",
 
-    // X currently unassigned.
+    // X designated as meta-classification for futuristic, anachronistic, or otherwise incongruent items which would otherwise fit in other categories.
+    // In cases where an item is fit to be meta-classified under both X and M, the proper order is 'MX'.
 
     // Y currently unassigned.
 
