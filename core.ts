@@ -1030,7 +1030,4 @@ export class RandomTable {
 
 }
 
-let test = new Roll(1,2,3,4,5,-6,7,8,'Advantage',1.5);
-console.log(test.result('detail'));
-console.log(test.result())
 
