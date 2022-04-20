@@ -90,7 +90,7 @@ export class Sourcebook {
     }
 
     read(s:string,confirmation:"Yes I'm sure") : this {
-        let book = require('./sourcebooks/'+s+'.json');
+        let book = require('./sourcebooks/'+s);
         Object.assign(this,book);
         return this;
     }
