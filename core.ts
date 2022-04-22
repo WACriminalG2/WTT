@@ -1,4 +1,5 @@
-import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
+import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Paragraph, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
+import { ParentageUpbringing } from './parentage';
 import * as fs from 'fs';
 import wtt from './wtt';
 import { randomInt } from 'crypto';
@@ -13,12 +14,13 @@ export class Sourcebook {
     URL?: string;
     Description: string;
     Wares?: Ware[];
+    Races?: ParentageUpbringing[] = [];
 
     // Content types which may eventually be included, but not yet implemented 
 
     CharClasses?: Array<any>;
     SubClasses?: Array<any>;
-    Races?: Parentage[]; // Plan to use "An Orc And An Elf Had A Baby" rules
+     // Plan to use "An Orc And An Elf Had A Baby" rules
     Backgrounds?: Array<any>;
     Spells?: Array<any>;
     Feats?: Array<any>;
@@ -72,6 +74,16 @@ export class Sourcebook {
         })
         return this;
     };
+
+    parentages(p:ParentageUpbringing[]) : this {
+        p.forEach((P) => {
+            let cur = P;
+            cur.Source = this.Title;
+            cur.Shortform = this.Shortform;
+            this.Races.push(cur);
+        })
+        return this;
+    }
 
     public shop(s:string) : Ware[] {
         let w = [];
@@ -984,10 +996,7 @@ export class Weapon extends Ware {
 }
 
 // Player Options
-export class Parentage {
-    Name: string
 
-}
 
 // Simple price generation helpers
 export function CP(n:number) : Price {
@@ -1028,6 +1037,80 @@ export class Generator {
 
 export class RandomTable {
 
+}
+
+export class Spell {
+    Name: string;
+    Page?: string;
+    Level: number;
+    School: string;
+    CastingTime: string;
+    Range: number | 'Hearing' | 'Self' | 'Touch' | 'Vision';
+    S: boolean = false;
+    V: boolean = false;
+    M: string = '';
+    Duration: string = 'Instantaneous';
+    Description: TextBlock[] = [];
+    Source?: string; // Set at time of sourcebook integration
+    Shortform?: string; // Set at time of sourcebook integration
+
+    constructor(name:string,page:string,level:number,school:string) {
+        this.Name = name;
+        this.Page = page;
+        this.Level = level;
+        this.School = school;
+        return this;
+    }
+
+    concentrate(max:string) : this {
+        this.Duration = 'Concentration, up to ' + max + '.';
+        return this;
+    }
+
+    desc(d:string) : this {
+        this.Description.push({type: 'Paragraph',content:d});
+        return this;
+    }
+
+    lasts(duration:string) : this {
+        this.Duration = duration;
+        return this;
+    }
+
+    m(material:string) : this {
+        this.M = material;
+        return this;
+    }
+
+    range(r:number) : this {
+        this.Range = r;
+        return this;
+    }
+
+    s() : this {
+        this.S = true;
+        return this;
+    }
+
+    self() : this {
+        this.Range = 'Self';
+        return this;
+    }
+
+    takes(CastTime: string) : this {
+        this.CastingTime = CastTime;
+        return this;
+    }
+
+    touch() : this {
+        this.Range = 'Touch';
+        return this;
+    }
+
+    v() : this {
+        this.V = true;
+        return this;
+    }
 }
 
 
