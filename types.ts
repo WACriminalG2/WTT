@@ -14,9 +14,10 @@ export type WTTclass = `${'M'|''}${keyof typeof WTT}`;
 
 
 // Text types for item descriptions, etc.
+export type AbilityText = {type: 'Ability',content:{name:string,text:string}};
 export type Paragraph = {type:'Paragraph',content:string};
 export type TextList = {type:'UnorderedList'|'OrderedList',content:string[]};
 export type TextSubheading = {type:'Subheading',content:string};
 
 
-export type TextBlock = Paragraph | TextSubheading | TextList
+export type TextBlock = AbilityText | Paragraph | TextSubheading | TextList

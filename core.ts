@@ -15,6 +15,7 @@ export class Sourcebook {
     Description: string;
     Wares?: Ware[];
     Races?: ParentageUpbringing[] = [];
+    Spells?: Spell[];
 
     // Content types which may eventually be included, but not yet implemented 
 
@@ -22,7 +23,6 @@ export class Sourcebook {
     SubClasses?: Array<any>;
      // Plan to use "An Orc And An Elf Had A Baby" rules
     Backgrounds?: Array<any>;
-    Spells?: Array<any>;
     Feats?: Array<any>;
     Locations?: Array<any>;
     NPCs?: Array<any>;
@@ -85,6 +85,16 @@ export class Sourcebook {
         return this;
     }
 
+    cast(spellbook:Spell[]) : this {
+        spellbook.forEach((s) => {
+            let S = s;
+            S.Shortform = this.Shortform;
+            S.Source = this.Title;
+            this.Spells.push(S);
+        });
+        return this;
+    }
+
     public shop(s:string) : Ware[] {
         let w = [];
         this.Wares.forEach((i) => {
@@ -140,13 +150,9 @@ export class Ware {
         return this;
     };
 
-    lore(l: string | string[], t?: 'Paragraph' | 'UnorderedList' | 'OrderedList' | 'Subheading') : this {
+    lore(l: string) : this {
         
-        if (t === 'UnorderedList' && l instanceof Array) {this.Lore.push({type:t,content:l})}
-        else if (t === 'OrderedList' && l instanceof Array) {this.Lore.push({type:t,content:l})}
-        else if (t === 'Subheading' && l instanceof String) {this.Lore.push({type:'Subheading',content: <string> l})}
-        else {this.Lore.push({type:'Paragraph',content:<string> l})}
-        
+        this.Lore.push({type:'Paragraph',content:l});
         return this;
     }
 
@@ -1036,7 +1042,7 @@ export class Generator {
 }
 
 export class RandomTable {
-
+    Title: string;
 }
 
 export class Spell {
@@ -1049,6 +1055,7 @@ export class Spell {
     S: boolean = false;
     V: boolean = false;
     M: string = '';
+    Ritual: boolean = false;
     Duration: string = 'Instantaneous';
     Description: TextBlock[] = [];
     Source?: string; // Set at time of sourcebook integration
@@ -1062,6 +1069,21 @@ export class Spell {
         return this;
     }
 
+    action() : this {
+        this.CastingTime = '1 action';
+        return this;
+    }
+
+    AHL(t:string) : this {
+        this.Description.push({type:'Ability',content:{name:'At Higher Levels',text:t}});
+        return this;
+    }
+
+    bonus() : this {
+        this.CastingTime = '1 bonus action';
+        return this;
+    }
+
     concentrate(max:string) : this {
         this.Duration = 'Concentration, up to ' + max + '.';
         return this;
@@ -1069,6 +1091,11 @@ export class Spell {
 
     desc(d:string) : this {
         this.Description.push({type: 'Paragraph',content:d});
+        return this;
+    }
+
+    instant() : this {
+        this.CastingTime = 'Instantaneous';
         return this;
     }
 
@@ -1084,6 +1111,16 @@ export class Spell {
 
     range(r:number) : this {
         this.Range = r;
+        return this;
+    }
+
+    reaction() : this {
+        this.CastingTime = '1 reaction';
+        return this;
+    }
+
+    ritual() : this {
+        this.Ritual = true;
         return this;
     }
 

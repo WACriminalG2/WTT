@@ -125,6 +125,9 @@ export default {
         "PO": "Oils",
         "PP": "Potions", // This category should only be used for technically mundane substances; true magic potions should be classified under 'MPP'.
         "PS": "Poisons",
+            "PS0": "Ingested Poisons",
+            "PS1": "Inhaled Poisons",
+            "PS2": "Contact Poisons",
 
     // Q currently unassigned.
 
@@ -180,7 +183,8 @@ export default {
     "W": "Weaponry",
         "WA": "Ammunition",
         "WB": "Blade Weapons",
-            "WB0": "Swords, Knives, and Daggers",
+            "WB0": "Swords",
+            "WB1": "Knives and Daggers",
         "WC": "Clubs and Blunt Weaponry",
         "WF": "Foci and Symbols",
             "WF0": "Arcane Foci",
@@ -195,6 +199,7 @@ export default {
             "WR1": "Firearms",
         "WT": "Thrown Weapons",
         "WV": "Staves",
+        "WW": "Whips",
         "WX": "Axes",
         "WZ": "Placeholder",
 

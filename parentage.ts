@@ -1,7 +1,9 @@
+import { TextBlock } from "./types";
+
 export class ParentageUpbringing {
     Name: string;
     Subtitle?: string;
-    Description?: string;
+    Description?: TextBlock[] = [];
     Traits: PorUTrait[] =[];
     Page: string;
 
@@ -11,10 +13,14 @@ export class ParentageUpbringing {
     
     constructor(name:string,page:string,subtitle?:string,desc?:string) {
         this.Name = name;
-        this.Subtitle = subtitle;
-        this.Description = desc;
         this.Page = page;
-        this.Traits = [];
+        if (subtitle) {this.Subtitle = subtitle};
+        if (desc) {this.Description.push({type:'Paragraph',content:desc})};
+        return this;
+    }
+
+    desc(d:string) : this {
+        this.Description.push({type:'Paragraph',content:d});
         return this;
     }
 
@@ -22,6 +28,11 @@ export class ParentageUpbringing {
         t.forEach((T) => {
             this.Traits.push(T);
         })
+        return this;
+    }
+
+    subtitle(st: string) : this {
+        this.Subtitle = st;
         return this;
     }
 }
