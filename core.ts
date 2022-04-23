@@ -1,4 +1,4 @@
-import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, Paragraph, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
+import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, MagicItemCategory, Paragraph, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
 import { ParentageUpbringing } from './parentage';
 import * as fs from 'fs';
 import wtt from './wtt';
@@ -7,39 +7,36 @@ import { randomInt } from 'crypto';
 // Primary classes
 export class Sourcebook {
     Title: string; // Player's Handbook
-    Author: string; // Wizards of the Coast
-    Shortform: string; //PHB
+    Author: string = ""; // Wizards of the Coast
+    Shortform: string = ""; //PHB
     Ruleset: '5e';
-    Version: string; // v1.0
+    Version: string = ""; // v1.0
     URL?: string;
-    Description: string;
-    Wares?: Ware[];
+    Description: string = "";
+    Wares?: Ware[] = [];
     Races?: ParentageUpbringing[] = [];
-    Spells?: Spell[];
+    Spells?: Spell[] = [];
 
     // Content types which may eventually be included, but not yet implemented 
-
-    CharClasses?: Array<any>;
-    SubClasses?: Array<any>;
-     // Plan to use "An Orc And An Elf Had A Baby" rules
+    
     Backgrounds?: Array<any>;
+    Bestiary?: Array<any>;
+    CharClasses?: Array<any>;
+    Favors?: Array<any>;
     Feats?: Array<any>;
+    Generators?: Generator[];
     Locations?: Array<any>;
     NPCs?: Array<any>;
-    Bestiary?: Array<any>;
-    Favors?: Array<any>;
-    Rules?: Array<any>;
-    Generators?: Generator[];
     RandomTables?: RandomTable[];
+    Rules?: Array<any>;
+    SubClasses?: Array<any>;
     Trinkets?: Array<any>;
-    
+    Upbringings?: ParentageUpbringing[];    
+
 
     constructor(t: string,s: string) {
         this.Title = t;
-        this.Author = "";
         this.Shortform = s;
-        this.Description = "";
-        this.Wares = []
     };
 
     desc(d:string) : this {
@@ -133,7 +130,7 @@ export class Ware {
     Advantages?: string[] = []; // List of roll types granted advantage to the user of this item.
     Disadvantages?: string[] = []; // List of roll types granted disadvantage to the user of this item.
     Consumable: boolean = false;
-    // Needs an Attunement property.
+    Attunement: boolean | string = false;
     // Needs an Icon property, could possibly be used for report grouping?
 
     // These are assigned at stock-time.
@@ -144,6 +141,11 @@ export class Ware {
         this.Name = n;
         this.Page = p;
     };
+
+    autoprice(rarity:Rarity,impact:'Major'|'Minor',use:'Single'|'Limited'|'Charged'|'Permanent') : this {
+        this.sell(new Price().autoprice(rarity,impact,use));
+        return this;
+    }
 
     desc(d: string) : this {
         this.Description.push({type:'Paragraph',content:d});
@@ -172,6 +174,16 @@ export class Ware {
         this.Rarity = r;
         return this;
     };
+
+    attune(by?:string) : this {
+        if (by) {
+            this.Attunement = by;
+        } else {
+            this.Attunement = true;
+        }
+
+        return this;
+    }
 
 // Weight methods 
 
@@ -262,17 +274,77 @@ export class Price {
     gp: number = 0;
     pp: number = 0;
     Measure: string = ""; // 1 hr; 20 ft; 1 week
-    Variable: boolean = false; // Whether the item's price is consistent or variable
-    High?: Price; // If the item has a variable price, this is the high end of its price range.
-    Low?: Price; // If the item has a variable price, this is the low end of its price range. 
 
-    constructor(c: number, s: number, e: number, g: number, p: number) {
-        this.cp = c;
-        this.sp = s;
-        this.ep = e;
-        this.gp = g;
-        this.pp = p;
-        this.Variable = false;
+    constructor(c?: number, s?: number, e?: number, g?: number, p?: number) {
+        if (c) {this.cp = c;}
+        if (s) {this.sp = s;}
+        if (e) {this.ep = e;}
+        if (g) {this.gp = g;}
+        if (p) {this.pp = p;}
+    }
+
+    // Auto-pricing intended for magical items, based on TheAngryGM's work here: https://theangrygm.com/how-to-price-an-item/
+    autoprice(rarity:Rarity,impact:'Major'|'Minor',use:'Single'|'Limited'|'Charged'|'Permanent') : this {
+
+        // Start by assuming common
+        let pricing = {
+                Single:[50,70],
+                Limited:[60,80],
+                Charged:[70,90],
+                Permanent:[80,100]
+        }
+
+        if (rarity === 'Uncommon') {
+            pricing = {
+                Single:[250,350],
+                Limited:[300,400],
+                Charged:[350,450],
+                Permanent:[400,500]
+        }
+    }
+
+        if (rarity === 'Rare') {
+            pricing = {
+                Single:[2500,3500],
+                Limited:[3000,4000],
+                Charged:[3500,4500],
+                Permanent:[4000,5000]
+        }
+    }
+
+        if (rarity === 'Very Rare') {
+            pricing = {
+                Single:[25000,35000],
+                Limited:[30000,40000],
+                Charged:[35000,45000],
+                Permanent:[40000,50000]
+        }
+    }
+
+        if (rarity === 'Legendary') {
+            pricing = {
+                Single:[125000,175000],
+                Limited:[150000,200000],
+                Charged:[175000,225000],
+                Permanent:[200000,250000]
+        }    
+    }
+        if (rarity === 'Artifact') {
+            pricing = {
+                Single:[1250000,1750000],
+                Limited:[1500000,2000000],
+                Charged:[1750000,2250000],
+                Permanent:[2000000,2500000]
+            }
+        }
+
+        if (impact === 'Minor') {
+            this.gp = pricing[use][0]
+        } else {
+            this.gp = pricing[use][1]
+        }
+
+        return this;
     }
 
     CP(n:number) : this {
@@ -300,23 +372,8 @@ export class Price {
         return this;
     }
 
-    measure(m:string) : Price {
+    measure(m:string) : this {
         this.Measure = m;
-        return this;
-    }
-
-    variable() : this {
-        this.Variable = true;
-        return this;
-    }
-
-    high(p:Price) : this {
-        this.High = p;
-        return this;
-    }
-
-    low(p:Price) : this {
-        this.Low = p;
         return this;
     }
 
@@ -329,6 +386,7 @@ export class Price {
         if (this.cp > 0) {arr.push(this.cp + "cp")}
         
         let x = arr.join(",");
+        if (x.length === 0) { x += '0cp'};
         if (this.Measure.length > 0) {
             x +=" / "+this.Measure
         }
@@ -1149,5 +1207,3 @@ export class Spell {
         return this;
     }
 }
-
-

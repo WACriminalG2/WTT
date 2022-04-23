@@ -11,9 +11,9 @@ export class ParentageUpbringing {
     Source?: string;
     Shortform?: string;
     
-    constructor(name:string,page:string,subtitle?:string,desc?:string) {
+    constructor(name:string,page:string | number,subtitle?:string,desc?:string) {
         this.Name = name;
-        this.Page = page;
+        this.Page = page.toString();
         if (subtitle) {this.Subtitle = subtitle};
         if (desc) {this.Description.push({type:'Paragraph',content:desc})};
         return this;

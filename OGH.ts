@@ -29,11 +29,17 @@ let BullywugToadspeaker = new PorUTrait('Speak with Frogs and Toads','You can co
 let Climber = new PorUTrait("Climber","You have a climbing speed of 30 ft, and when you aren't wearing medium or heavy armor, you can descend headfirst.",4)
 let Darkvision60 = new PorUTrait("Darkvision","You have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray.",4)
 let FeyAncestry = new PorUTrait("Fey Ancestry",". You have advantage on saving throws you make to avoid or end the charmed condition on yourself.",2)
+let GuaxinDexterity = new PorUTrait('Guaxin Dexterity','You can disengage using your bonus action.',2)
+let GuaxinMagic = new PorUTrait('Guaxin Magic',"You know the 'Vicious Mockery' cantrip. When you reach 3rd level, you can cast the 'Knock' spell once with this trait, and regain the ability to do so when you finish a long rest. Intelligence, Wisdom, or Charisma is your spellcasting ability for these spells (choose when you select this race).",4)
 let HoldBreath15 = new PorUTrait("Hold Breath","You can hold your breath for up to 15 minutes at a time.",1)
 let IkwiikwiiSpeed = new PorUTrait('Ikwiikwii Movement','Your base walking speed is 25 feet. If both of your hands are unoccupied, you can run on all fours at a speed of 35 feet.',0)
 let IkwiikwiiTalons = new PorUTrait('Owlbear Talons','You have sharp talons, which grant you a climbing speed of 20 feet. In addition, your claws and beak are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal slashing damage equal to 1d4 + your Strength modifier.',2)
 let ImposingStature = new PorUTrait("Ozo Stature","You are proficient in the Intimidation skill.",2)
 let ImprovedQuills = new PorUTrait("Improved Quills","The damage your quills deal is increased to twice your proficiency bonus. In addition, you can make ranged attacks with proficiency using your spines, that deal 1d8 piercing damage with a range of 60 feet. You can make a number of these attacks equal to your Constitution modifier (minimum 1). You regain expended uses of your spine attacks when you complete a short or long rest.",6)
+let KangarenAdaptation = new PorUTrait('Arid Adaptation',"Your body is well-suited to dry climates, such as arid deserts, and you require only half the amount of water as other humanoids to survive. You're also naturally adapted to hot climates as described in Chapter 5 of the Dungeon Master's Guide.",1)
+let KangarenHop = new PorUTrait('Mighty Hop','On your turn, if you move at least 20 feet in a straight line along the ground without encountering difficult terrain, you gain 10 additional feet of movement, which can only be used to move along the same line.',4)
+let KangarenLegs = new PorUTrait('Extended Long Jump',"Your powerful legs allow you to leap great distances. You can cover a number of additional feet equal to twice your proficiency bonus when making a long jump.",2)
+let KangarenMuscle = new PorUTrait('Kangaren Muscle',"Your muscular arms and legs are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal bludgeoning damage equal to 1d4 + your Strength modifier, instead of the damage normal for an unarmed strike. When you take the attack action, you can use your bonus action to make one attack with your natural weapons.",2)
 let KeenSight = new PorUTrait('Keen Sight','You have advantage on Wisdom (Perception) checks made that rely on sight.',6)
 let KeenSmellAndHearing = new PorUTrait("Keen Smell and Hearing","You have advantage on checks you make with the Wisdom (Perception) skill that rely on smell or hearing.",4);
 let Leverage = new PorUTrait('Leverage','You can wield weapons with the "heavy" property without the penalty usually applied to Small creatures.',3)
@@ -51,6 +57,8 @@ let PanzuSize = new PorUTrait('Panzu Stature','Your muscle is much denser and mo
 let PoorEyesight = new PorUTrait("Poor Eyesight","You have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight when the target of your attack, or whatever you are trying to perceive is not in bright light or direct sunlight.",-3);
 let PowerfulBuild = new PorUTrait("Powerful Build","You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift.",1);
 let Quills = new PorUTrait("Quills","Portions of your body are covered in hard, sharp quills. When a creature you can see hits you with a melee attack that lacks the reach property or attempts to grapple you, you can use your reaction to deal piercing damage to your attacker equal to your proficiency bonus. You can poison your spines as if they were a weapon.",2);
+let RaposiDexterity = new PorUTrait('Raposi Dexterity',"You are proficient in the Stealth skill. Additionally, you can hide using your bonus action.",3)
+let RaposiMagic = new PorUTrait('Raposi Magic',"You know the 'Friends' cantrip. At 3rd level, you can cast the 'Expeditious Retreat' spell once with this trait, and regain the ability to do so when you finish a long rest. Intelligence, Wisdom, or Charisma is your spellcasting ability for these spells (choose when you select this race).",4)
 let RhinoxArmor = new PorUTrait("Pachyderm","You have thick, leathery skin. When you aren’t wearing armor, your AC is 13 + your Dexterity modifier. If you are using a shield, you can apply the shield's bonus as normal.",3)
 let RhinoxCharge = new PorUTrait("Trampling Charge","If you move at least 20 feet in a straight line toward a Large or smaller creature and hit them with a horn attack, they must succeed a Strength saving throw DC 8 + your proficiency bonus + your Strength modifier or be knocked prone.",3);
 let RhinoxHide = new PorUTrait("Thick Hide","Your hide is even thicker than usual. You can use your reaction to position your plates advantageously, granting you resistance to an incoming attack that would deal piercing or slashing damage to you.",12);
@@ -59,10 +67,13 @@ let RhinoxSmell = new PorUTrait("Keen Smell","You have advantage on checks you m
 let StunningMight = new PorUTrait('Stunning Might','When you hit a creature a melee attack, you can attempt to stun the creature with a bonus action. The target makes a Constitution saving throw DC 8 + your proficiency bonus + your Strength modifier or it is stunned until the start of its next turn. You can use this trait once, and must finish a short or long rest before you can use it again.',2)
 let SuxiuAgility = new PorUTrait('Suxiu Agility',"Your reflexes and agility allow you to move with a burst of speed. When you move on your turn, you can double your speed. Once you use this trait, you can't use it again until you move 0 feet on your turn.",4)
 let SuxiuTail = new PorUTrait('Suxiu Tail','You can make object interactions using your tail and if you are not wearing medium or heavy armor, you can suspend your body from it.',2)
+let TenkoJaunt = new PorUTrait('Tenko Traveling',"As a bonus action, you can enter the ethereal plane, and take the Dash action when you do. You can remain in the ethereal plane until the end of your next turn. Once you use this trait, you can't use it again until you finish a short or long rest.",2)
+let TenkoMagic = new PorUTrait('Tenko Magic',"You know the 'Fire Bolt' cantrip. You can cast the 'Faerie Fire' spell once; you must finish a long rest in order to cast the spell again using this trait. When you reach 3rd level, you can cast the 'Magic Mouth' spell once without the need for any material components; you must finish a long rest in order to cast the spell again using this trait. At 5th level, you can cast the 'Nystul's Magic Aura' spell once; you must finish a long rest in order to cast the spell again using this trait. Intelligence, Wisdom, or Charisma is your spellcasting ability for these spells (choose when you select this race).",8)
 let ThanoiBlubber = new PorUTrait("Blubber","You have resistance to cold damage. You're also acclimated to cold climates as described in Chapter 5 of the Dungeon Master's Guide. You are uncomfortable in warmer climates. In hot climates, you have disadvantage on saving throws against exhaustion.",3)
 let ThanoiFlippers = new PorUTrait("Flippers"," Your clawed flipper-like feet grant you a swimming speed of 30 feet. Difficult terrain due to ice or snow doesn't cost you extra movement.",4)
 let ThanoiTusks = new PorUTrait("Tusks","Your long tusks are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal piercing damage equal to 1d6 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike.",2)
 let TypeMonstrosity = new PorUTrait('Monstrous','Your creature type is Monstrosity.',2)
+let VulpiniCompass = new PorUTrait('Compass Sense','Barring magical interference, you always know which way is north.',1)
 let Walk25 = new PorUTrait("Slow","You have a base walking speed of 25 feet.",-2)
 
 
@@ -82,7 +93,9 @@ let Walk25 = new PorUTrait("Slow","You have a base walking speed of 25 feet.",-2
     // Grimalkin
     // Grung
     // Haashir
-    // Kangaren
+
+    let Kangaren = new ParentageUpbringing('Kangaren','37','Ardor of the Arid Lands',"Kangaren dwell in arid grasslands and dusty deserts. Most kangaren are strict vegetarians, and will vocally disapprove of meat-eating. This should not be confused with an aversion to blood, however: learning to fight is part of becoming an adult in kangaren culture. Children begin fighting with others their as early as age 6, and many do not make it to adulthood without suffering at least two serious injuries in their youth.").multitrait([KangarenAdaptation,KangarenHop,KangarenLegs,KangarenMuscle])
+
     // Kamelon
     // Kunek
     // Madra
@@ -100,9 +113,10 @@ let Walk25 = new PorUTrait("Slow","You have a base walking speed of 25 feet.",-2
 
     // Ursine
     // Varkinds
-    // Vulpini
+    
+    let Vulpini = new ParentageUpbringing('Vulpini','51','Cunning, Clever and Fearless',"Vulpini are humanoids with features that resemble foxes, coyotes, badgers, skunks, or racoons, depending on their ancestry. They can be white, grey, black, red, brown, tawny. Some have alternating stripes along their bodies or tails.").multitrait([Little30,Darkvision60,VulpiniCompass,RaposiDexterity,RaposiMagic,TenkoMagic,TenkoJaunt,GuaxinDexterity,GuaxinMagic])
 
-// FEY FOLK
+// FEY FOLK 
     // Boggles
     // Darklings
     // Dryads
@@ -183,7 +197,9 @@ spell("Arcane Strike",'207',1,'Evocation').action().range(10).v().s().m('a melee
 
 spell("Arcane Razor",'207',3,'Evocation').action().self().v().s().m('a melee weapon made of metal worth at least 10 gp that deals slashing damage').instant().desc("You infuse your weapon with arcane energy and whirl it in a circle, unleashing a wave of razor-thin magic out in all directions. Make a melee weapon attack roll. All creatures withing 15 feet of you whose an AC is less than your attack roll suffer the attack’s normal damage plus an additional 4d10 slashing damage. The spell also damages any objects in the area that aren’t being worn or carried.").AHL(". When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d10 for each slot level above 3rd."),
 
-spell("Avalanche",'207',7,'Evocation').action().range(300).v().s().m('a quartz crystal').instant().desc("Choose a point you can see on the ground within range. A torrent of ice, rock and snow fall in a 30-foot-radius, 40-foot-high cylinder centered on that point. Each creature in that area must make a Dexterity saving throw. On a failure, a creature takes 4d10 cold and 4d10 bludgeoning damage on a failed save and is knocked prone. Creatures that fail their saving throw by 5 or more are restrained by the rubble. A creature can use an action to pull itself or another buried creature free by making a Strength check with a DC equal to your spell save DC.").desc("Additionally, objects in the area take 4d10 bludgeoning damage, and the area becomes difficult terrain until cleared. Each 5-foot-square portion of the area requires at least 1 minute to clear by hand. The ice and rocks melt away over the course of the next 24 hours.").AHL("When you cast this spell using a spell slot of 8th level or higher, the damage increases by 1d10 for each of its effects.")
+spell("Avalanche",'207',7,'Evocation').action().range(300).v().s().m('a quartz crystal').instant().desc("Choose a point you can see on the ground within range. A torrent of ice, rock and snow fall in a 30-foot-radius, 40-foot-high cylinder centered on that point. Each creature in that area must make a Dexterity saving throw. On a failure, a creature takes 4d10 cold and 4d10 bludgeoning damage on a failed save and is knocked prone. Creatures that fail their saving throw by 5 or more are restrained by the rubble. A creature can use an action to pull itself or another buried creature free by making a Strength check with a DC equal to your spell save DC.").desc("Additionally, objects in the area take 4d10 bludgeoning damage, and the area becomes difficult terrain until cleared. Each 5-foot-square portion of the area requires at least 1 minute to clear by hand. The ice and rocks melt away over the course of the next 24 hours.").AHL("When you cast this spell using a spell slot of 8th level or higher, the damage increases by 1d10 for each of its effects."),
+
+spell("Avyie's Temporal Trickery",'207',3,'Transmutation').action().self().v().s().m('a broken clock').concentrate('1 minute').desc("You dislodge yourself from your current temporality, granting you a modicum of control over the flow of time. For the duration, you can use your bonus action to stop time until the end of your turn. While time is stopped, you are undetectable and other creatures cannot react to your actions. At the end of your turn, time resumes and everything you did during your turn happens simultaneously - any creatures that you damaged take that damage at the end of your turn, and any creatures that must make a saving throw to avoid an effect must so at the end of your turn. If you move on your turn, other creatures experience events as if you had teleported.").desc("When the spell ends, your stolen time catches up with you. Until the end of your next turn, you cannot move or take any actions, and any attacks made against you have advantage.")
 ]
 
 // Items
@@ -198,13 +214,13 @@ let weapons : Ware[] = [
     new Weapon('Chain Whip','289').martial().reach().sell(10).lb(4).desc('A chain whip is made of interlocking links of metal, usually with a weight at the end of the chain to improve control.').dmg(new Roll(2),'Bludgeoning').classify('WW'),
     new Weapon('Longbow, Composite','289').martial().ammunition('100/400').heavy().twohanded().sell(75).lb(6).desc("This reinforced longbow is especially difficult to draw. If your Strength score is lower than 16, you have a penalty on attack rolls you make with this weapon equal to the difference. For example, if your Strength score is 13, you have a -3 penalty. You can add your Strength modifier instead of your Dexterity modifier to this weapon's damage rolls.").dmg(new Roll(0,2),'Piercing').classify('WR0'),
     new Weapon('Greatshield','289').martial().heavy().twohanded().sell(50).lb(10).desc("A greatshield is made from wood or metal and is carried with two hands. If your Strength score is less than 13, equipping a greatshield reduces your movement speed by 5 feet. You can add a greatshield's AC bonus to Strength (Athletics) checks you make to shove a creature. On a hit, it deals 1d8 bludgeoning damage.").dmg(8,'Bludgeoning').classify('AS'),
-    new Weapon('Katana','289').martial().finesse().versatile(8).dmg(6,'Slashing').desc('A katana is an especially light type of longsword. In addition to being a martial weapon, the katana is also a monk weapon.').classify('WB0'),
+    new Weapon('Katana','289').martial().finesse().versatile(8).dmg(6,'Slashing').desc('A katana is an especially light type of longsword. In addition to being a martial weapon, the katana is also a monk weapon.').sell(25).lb(3).classify('WB0'),
     new Weapon('Kusarigama','289').martial().twohanded().reach().sell(15).lb(4).dmg(4,'Slashing').desc('A kusarigama consists of a long metal chain with a sickle on one end, and a heavy weight at the other. A monk or other individual trained in kusarigamajutsu can perform the following maneuvers with it in combat:').desc('Grapple. Once on your turn, you can make an attack with the weighted end of the weapon. If you hit, the weapon deals damage equal to your Strength modifier (or Dexterity modifier if you are a monk and you choose to use your martial arts feature), and if the target is no more than one size category larger than you, the target must make a Strength (Athletics) check, contested by your attack roll. If you win the contest, the creature is grappled by you, and has disadvantage on the first weapon attack roll they make on the next turn. You can only grapple one creature at a time when using the kusarigama to grapple.').desc('Pull. You can shove a creature grappled by your kusarigama. When you do, you must choose between shoving them prone or pulling them 5 feet toward you.').desc('Disarm. You can make a special melee attack against a creature you are grappling with your kusarigama. If you are able to make multiple attacks with the attack action, this replaces one of them. You release your grapple, and the target must succeed on a Strength saving throw. The DC of the saving throw is your Ki save DC or 8 + your Strength modifier, whichever is higher. On a failed save, it drops the object you choose. The object lands at its feet, and you can use your reaction to move it up to 10 feet away.').classify('WB')
 ];
 
 // Finish Sourcebook
 
-sb.parentages([Apelong,Bullywug,Ikwiikwii,Ludai,Quillen,Rhinox,Skiouros,Thanoi]);
+sb.parentages([Apelong,Bullywug,Ikwiikwii,Kangaren,Ludai,Quillen,Rhinox,Skiouros,Thanoi]);
 sb.cast(spellbook);
 sb.multistock(weapons).multistock(poisons);
 

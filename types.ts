@@ -2,6 +2,7 @@ import {default as WTT} from './wtt';
 
 // Utility types
 export type Rarity = 'Common' | 'Uncommon' | 'Rare' | 'Very Rare' | 'Legendary' | 'Artifact';
+export type MagicItemCategory = 'Armor' | 'Potion' | 'Ring' | 'Rod' | 'Scroll' | 'Staff' | 'Wand' | 'Weapon' | 'Wondrous Item'
 export type Ability = 'Strength' | 'Dexterity' | 'Constitution' | 'Intelligence' | 'Wisdom' | 'Charisma';
 export type Skill = 'Acrobatics' | 'Animal Handling' | 'Arcana' | 'Athletics' |'Deception' |'History' |'Insight' |'Intimidation' |'Investigation' |'Medicine' |'Nature' |'Perception' |'Performance' |'Persuasion' |'Religion' |'Sleight of Hand' |'Stealth' |'Survival';
 export type Alignment = {Order:AlignOrder,Moral:AlignMoral};
