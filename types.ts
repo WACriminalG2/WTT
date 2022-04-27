@@ -11,7 +11,7 @@ export type AlignMoral = 'Good'|'Neutral'|'Evil'|'Any';
 export type CreatureSize = 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gargantuan';
 export type DamageType = 'Acid' | 'Bludgeoning' | 'Cold' | 'Fire' | 'Force' | 'Lightning' | 'Necrotic' | 'Piercing' | 'Poison' | 'Psychic' | 'Radiant' | 'Slashing' | 'Thunder';
 export type DiceRoll = `${number}d${number}`;
-export type WTTclass = `${'M'|''}${keyof typeof WTT}`;
+export type WTTclass = `${'M'|''}${'X'|''}${keyof typeof WTT}`;
 
 
 // Text types for item descriptions, etc.

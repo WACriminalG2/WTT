@@ -83,19 +83,19 @@ let armors = [
     
     new Shield('Shield','').sell(10).bonusAC(2).lb(6).classify("AS"),
 
-    new Armor('Leather Barding','','Light').sell(40).ac(11,'Dexterity').lb(20).classify("AN"),
-    new Armor('Padded Barding','','Light').sell(20).ac(11,'Dexterity').disadvantage('Stealth').lb(16).classify("AN"),
-    new Armor('Studded Leather Barding','','Light').sell(180).ac(12,'Dexterity').lb(13).classify("AN"),
+    new Armor('Leather Barding','','Light').sell(40).ac(11,'Dexterity').lb(20).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Padded Barding','','Light').sell(20).ac(11,'Dexterity').disadvantage('Stealth').lb(16).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Studded Leather Barding','','Light').sell(180).ac(12,'Dexterity').lb(13).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
 
-    new Armor('Chain Barding','','Medium').sell(200).ac(13,'Dexterity',2).lb(40).classify("AN"),
-    new Armor('Half Plate Barding','','Medium').sell(3000).ac(15,'Dexterity',2).disadvantage('Stealth').lb(80).classify("AN"),
-    new Armor('Hide Barding','','Medium').sell(40).ac(12,'Dexterity',2).lb(24).classify("AN"),    
-    new Armor('Scale Barding','','Medium').sell(200).ac(14,'Dexterity',2).disadvantage('Stealth').lb(90).classify("AN"), 
+    new Armor('Chain Barding','','Medium').sell(200).ac(13,'Dexterity',2).lb(40).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Half Plate Barding','','Medium').sell(3000).ac(15,'Dexterity',2).disadvantage('Stealth').lb(80).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Hide Barding','','Medium').sell(40).ac(12,'Dexterity',2).lb(24).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),    
+    new Armor('Scale Barding','','Medium').sell(200).ac(14,'Dexterity',2).disadvantage('Stealth').lb(90).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."), 
 
-    new Armor('Heavy Chain Barding','','Heavy').sell(300).ac(16).strReq(13).disadvantage('Stealth').lb(110).classify("AN"),
-    new Armor('Plate Barding','','Heavy').sell(6000).ac(18).strReq(15).disadvantage('Stealth').lb(130).classify("AN"),
-    new Armor('Ring Barding','','Heavy').sell(120).ac(14).disadvantage('Stealth').lb(80).classify('AN'),
-    new Armor('Splint Barding','','Heavy').sell(800).ac(17).strReq(15).disadvantage('Stealth').lb(120).classify("AN"),
+    new Armor('Heavy Chain Barding','','Heavy').sell(300).ac(16).strReq(13).disadvantage('Stealth').lb(110).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Plate Barding','','Heavy').sell(6000).ac(18).strReq(15).disadvantage('Stealth').lb(130).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Ring Barding','','Heavy').sell(120).ac(14).disadvantage('Stealth').lb(80).classify('AN').desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
+    new Armor('Splint Barding','','Heavy').sell(800).ac(17).strReq(15).disadvantage('Stealth').lb(120).classify("AN").desc("Barding is armor designed to protect an animal’s head, neck, chest, and body. Any type of armor shown on the Armor table can be purchased as barding. The cost is four times the equivalent armor made for humanoids, and it weighs twice as much."),
 ]
 
 let gear = [
@@ -194,8 +194,8 @@ let gear = [
 
     new Ware('Bit and bridle','').sell(2).lb(1).classify('T'),
     new Ware('Animal Feed','').sell(CP(5).measure('day')).lb(10).classify('F'),
-    new Ware('Saddle, Exotic','').sell(60).lb(40).classify('T'),
-    new Ware('Saddle, Military','').sell(20).lb(30).classify('T'),
+    new Ware('Saddle, Exotic','').sell(60).lb(40).classify('T').desc("An exotic saddle is required for riding any aquatic or flying mount."),
+    new Ware('Saddle, Military','').sell(20).lb(30).classify('T').desc("A military saddle braces the rider, helping you keep your seat on an active mount in battle. It gives you advantage on any check you make to remain mounted."),
     new Ware('Saddle, Pack','').sell(5).lb(15).classify('T'),
     new Ware('Saddlebags','').sell(4).lb(8).classify('T'),
     new Ware('Stabling','').sell(SP(5).measure('day')).classify('S')

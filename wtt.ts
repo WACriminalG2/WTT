@@ -116,6 +116,7 @@ export default {
         "OJ": "Jewelry",
         "OL": "Pants and Legwear",
         "OO": "Outerwear",
+            "OO0": "Robes",
         "OS": "Shirts and Tunics",
         "OU": "Undergarments",
 
@@ -128,6 +129,7 @@ export default {
             "PS0": "Ingested Poisons",
             "PS1": "Inhaled Poisons",
             "PS2": "Contact Poisons",
+            "PS3": "Injury Poisons",
 
     // Q currently unassigned.
 
@@ -159,7 +161,7 @@ export default {
         "SL": "Lodging, Room and Board",
         "SM": "Medical",
         "SR": "Religious Services and Blessings",
-        "SS": "Smithing",
+        "SS": "Smithing and Repair",
         "ST": "Training and Teaching",
         "SV": "Travel",
         
@@ -176,12 +178,13 @@ export default {
     // U currently unassigned.
 
     "V": "Vehicles",
-        "VA": "Airborne",
-        "VI": "Interplanar",
-        "VM": "Multipurpose",
-        "VN": "Nautical",
-        "VO": "Overland",
-        "VU": "Underground",
+        "VA": "Airborne Vehicles",
+        "VE": "Vehicular Equipment, Accessories, and Fuel",
+        "VI": "Interplanar Vehicles",
+        "VM": "Multipurpose Vehicles",
+        "VN": "Nautical Vehicles",
+        "VO": "Overland Vehicles",
+        "VU": "Underground Vehicles",
 
     "W": "Weaponry",
         "WA": "Ammunition",
