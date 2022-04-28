@@ -325,4 +325,4 @@ let tradegoods = [
     new Ware('Platinum','').sell(GP(500).measure('lb.')).classify('RM')
 ]
 
-sb.multistock(weapons).multistock(armors).multistock(gear).multistock(mounts).multistock(vehicles).multistock(tools).multistock(expenses).multistock(foods).multistock(tradegoods).write();
+sb.stock(weapons).stock(armors).stock(gear).stock(mounts).stock(vehicles).stock(tools).stock(expenses).stock(foods).stock(tradegoods).write();

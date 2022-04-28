@@ -200,6 +200,7 @@ export class Ware {
      * @param p If adapting from a published source, provides the page number within that source where this Ware may be found. May be a string or number.
      * @example new Ware('Bastard Sword',157)
      * @example new Ware('Greatshield', 'XXI')
+     * @returns Ware
      */
     constructor(name: string,page?: string | number) {
         this.Name = name;
@@ -211,7 +212,7 @@ export class Ware {
      * @param rarity The rarity of this item. @options Common | Uncommon | Rare | Very Rare | Legendary | Artifact
      * @param impact How impactful to the game this item should be. @options Major | Minor
      * @param use How many times, or how frequently, the item may be used for its primary purpose. See TheAngryGM for more detail on these options. @options Single | Limited | Charged | Permanent
-     * @returns Ware
+     * @returns this
      */
     autoprice(rarity:Rarity,impact:'Major'|'Minor',use:'Single'|'Limited'|'Charged'|'Permanent') : this {
         this.sell(new Price().autoprice(rarity,impact,use));
@@ -221,7 +222,7 @@ export class Ware {
     /**
      * Adds a paragraph to the Ware's description.
      * @param d Can be a string, or a TextBlock object. If a string, will be converted to a Paragraph TextBlock automatically.
-     * @returns Ware
+     * @returns this
      */
 
     desc(d: string | TextBlock ) : this {
@@ -233,7 +234,7 @@ export class Ware {
     /**
      * Adds a paragraph to the Ware's lore.
      * @param l The paragraph to add, as a string.
-     * @returns Ware
+     * @returns this
      */
 
     lore(l: string) : this {
@@ -244,7 +245,7 @@ export class Ware {
     /**
      * Tags this item with classification headings taken from the Waterdeep Trade Taxonomy. Can take as many headings as you want. See the WTT for a list of valid classification headings.
      * @param c Headings under which this item should be classified.
-     * @returns Ware
+     * @returns this
      */
     classify(...c: WTTclass[]) : this {
         c.forEach((s) => {
@@ -255,7 +256,7 @@ export class Ware {
 
     /**
      * Removes all classification headings from this item.
-     * @returns Ware
+     * @returns this
      */
     declassify() : this {
         this.Classifications = [];
@@ -265,7 +266,7 @@ export class Ware {
     /**
      * Sets the rarity of this Ware.
      * @param r The rarity to set. @options Common | Uncommon | Rare | Very Rare | Legendary | Artifact
-     * @returns Ware
+     * @returns this
      */
     rarity(r:Rarity) : this {
         this.Rarity = r;
@@ -275,10 +276,11 @@ export class Ware {
     /**
      * Indicates that this item requires attunement.
      * @param by Optional string. If provided, this item will require attunement under the described conditions. Otherwise, it may be attuned using the standard rules. 
+     * @example attune()
      * @example attune('a wizard, sorcerer, or druid')
      * @example attune('spending a week without speaking')
      * @example attune('severing your right hand and attaching this item to your wrist')
-     * @returns Ware
+     * @returns this
      */
     attune(by?:string) : this {
         if (by) {
@@ -293,7 +295,7 @@ export class Ware {
     /**
      * Sets the standard item category for a magic item.
      * @param c The category to set. @options Armor | Potion | Ring | Rod | Scroll | Staff | Wand | Weapon | Wondrous Item
-     * @returns Ware
+     * @returns this
      */
     mic(c:MagicItemCategory) : this {
         this.MagicItemCategory = c;
@@ -302,17 +304,35 @@ export class Ware {
 
 // Weight methods 
 
-    weigh(w:number,m:string) : this {
+/**
+ * Sets the weight of this Ware. Shorthand methods exist if you're using a common unit of measure for this weight: lb(), oz(), and ton().
+ * @param w The weight of this item, as a number.
+ * @param m The measure or unit of this item's weight.
+ * @returns this
+ * @example weighs(3,'lb.')
+ */
+
+    weighs(w:number,m:string) : this {
         this.Weight = w;
         this.WeightMeasure = m;
         return this;
     }
-
+/**
+ * Sets this Ware's weight, in pounds.
+ * @param n The number of pounds this Ware weighs.
+ * @returns this
+ */
     lb(n:number) : this {
         this.Weight = n;
         this.WeightMeasure = 'lb.'
         return this;
     }
+
+    /**
+     * Sets this Ware's weight, in ounces.
+     * @param n The number of ounces this Ware weighs.
+     * @returns this
+     */
 
     oz(n:number) : this {
         this.Weight = n;
@@ -320,31 +340,59 @@ export class Ware {
         return this;
     }
 
+    /**
+     * Sets this Ware's weight, in tons.
+     * @param n The number of tons this Ware weighs.
+     * @returns this
+     */
+
     ton(n:number) : this {
         this.Weight = n;
         this.WeightMeasure = 'ton';
         return this;
     }
 
+    /**
+     * Returns a string describing this Ware's weight.
+     * @returns String
+     */
     weight() : string {
         if (this.Weight) {return `${this.Weight} ${this.WeightMeasure}`}
         else {return `--`}
     }
 
 // Sub-type conversion methods
+/**
+ * Converts a normal Ware to a SellableCreature (a subclass of Ware).
+ * @returns SellableCreature
+ */
     creature() : SellableCreature {
         this.Category = 'Creature';
         return <SellableCreature> <unknown> this;
     }
+
+    /**
+     * Converts a normal Ware to a Service (a subclass of Ware).
+     * @returns Service
+     */
 
     service() : Service {
         this.Category = 'Service';
         return <Service> <unknown> this;
     }
 
+    /**
+     * Converts a normal Ware to a Weapon (a subclass of Ware).
+     * @returns Weapon
+     */
     weapon() : Weapon {
         return <Weapon> <unknown> this;
     }
+
+    /**
+     * Converts a normal Ware to an Armor (a subclass of Ware).
+     * @returns Armor
+     */
 
     armor() : Armor {
         return <Armor> <unknown> this;
@@ -352,31 +400,43 @@ export class Ware {
 
 // Price-setting methods
 
+/**
+ * Adds a list price to this Ware. A Ware may have multiple prices -- for more on why this might be useful, see the documentation on the Price class.
+ * @param p May be a number, or a Price object. If a number, will automatically generate a list price equal to that number of gold pieces. If a Price object, pushes that object to the Price[] directly.
+ * @returns this
+ */
+
     sell(p:Price | number) : this {
         if (p instanceof Price) {this.Prices.push(p)} else {this.Prices.push(GP(p))};
         return this;
     }
 
-    modify(m:string,c:string) : this {
-        this.PriceModifiers.push({
-            Modifier: m,
-            Circumstance: c
-        });
-        return this;
-    }
-
 // Other stuff
 
+/**
+ * If this item provides advantage on any kind of roll, you may indicate that using this method.
+ * @param s The type of roll this item provides advantage for.
+ * @returns this
+ */
     advantage(s:string) : this {
         this.Advantages.push(s);
         return this;
     }
-
+/**
+ * If this item provides disadvantage on any kind of roll, you may indicate that using this method.
+ * @param s The type of roll this item provides disadvantage for.
+ * @returns this
+ */
     disadvantage(s:string) : this {
         this.Disadvantages.push(s);
         return this;
     }
 
+    /**
+     * Used to obtain a string indicated the source and (if applicable) page number from which this item was adapted.
+     * @returns string
+     * @example citation() --> 'PHB35'
+     */
     citation() : string {
         return this.Shortform + this.Page;
     }
