@@ -15,10 +15,102 @@ export type WTTclass = `${'M'|''}${'X'|''}${keyof typeof WTT}`;
 
 
 // Text types for item descriptions, etc.
-export type AbilityText = {type: 'Ability',content:{name:string,text:string}};
-export type Paragraph = {type:'Paragraph',content:string};
-export type TextList = {type:'UnorderedList'|'OrderedList',content:string[]};
-export type TextSubheading = {type:'Subheading',content:string};
+
+export class AbilityText implements TextBlock {
+    type: 'Ability';
+    content:{name:string,text:string};
+
+    constructor(n:string,t:string) {
+        this.content = {name:n,text:t};
+        return this;
+    }
+
+    render() : HTMLElement {
+        let p = document.createElement('p');
+        let bold = document.createElement('b');
+        bold.innerText = this.content.name;
+        p.appendChild(bold);
+        p.innerText = this.content.text;
+        return p;
+    }
+};
+
+export class Paragraph implements TextBlock {
+    type:'Paragraph';
+    content:string;
+
+    constructor(c:string) {
+        this.content = c;
+        return this;
+    }
+
+    render() : HTMLElement {
+        let p = document.createElement('p');
+        p.innerText = this.content;
+        return p;
+    }
+};
+
+export class TextList implements TextBlock {
+    type:'UnorderedList'|'OrderedList';
+    content:string[];
+
+    constructor(t:'UnorderedList'|'OrderedList',...c:string[]) {
+        this.type = t;
+        this.content = c;
+        return this;
+    }
+
+    render() : HTMLElement {
+        let p = document.createElement('p');
+        this.content.forEach((block) => {
+            if (this.type === 'UnorderedList') {
+                let ul = document.createElement('ul');
+                ul.innerText = block;
+                p.appendChild(ul);
+            } else {
+                let li = document.createElement('li');
+                li.innerText = block;
+                p.appendChild(li);
+            }
+        })
+        return p;
+    }
+};
+
+export class TextSubheading implements TextBlock {
+    type:'Subheading';
+    content:string;
+
+    constructor(c:string) {
+        
+        this.content = c;
+        return this;
+    }
+
+    render() : HTMLElement {
+        let sh = document.createElement('h5');
+        sh.innerText = this.content;
+        return sh;
+    }
+};
 
 
-export type TextBlock = AbilityText | Paragraph | TextSubheading | TextList
+export interface TextBlock {
+    type:string;
+    content:any;
+    render() : HTMLElement;
+}
+
+export function enblockify(block:any) : TextBlock {
+    let x;
+    switch (block.type) {
+        case 'Paragraph': {x = new Paragraph(block.content); break;}
+        case 'Ability': {x = new AbilityText(block.content.name,block.content.text); break;}
+        case 'Subheading': {x = new TextSubheading(block.content); break;}
+        case 'UnorderedList': {x = new TextList('UnorderedList',block.content); break;}
+        case 'OrderedList': {x = new TextList('OrderedList',block.content); break;}
+    }
+
+    return x;
+}

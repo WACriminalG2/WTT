@@ -11,6 +11,7 @@ export default {
         "AN": "Non-Humanoid",
         "AS": "Shields",
         "AW": "Wing and other Appendage",
+        "AZ": "Armor Properties",
 
     "B": "Books and Other Written Materials",
         "BA": "Arcana",
@@ -209,6 +210,7 @@ export default {
             "WF2": "Holy Symbols",
         "WG": "Siege Weaponry",
         "WH": "Hammers",
+        "WL": "Tool-form Weapons",
         "WP": "Polearms",
             "WP0": "Spears and Javelins",
         "WR": "Ranged Weapons",
@@ -218,7 +220,7 @@ export default {
         "WV": "Staves",
         "WW": "Whips",
         "WX": "Axes",
-        "WZ": "Placeholder",
+        "WZ": "Weapon Properties",
 
     // X designated as meta-classification for futuristic, anachronistic, or otherwise incongruent items which would otherwise fit in other categories.
     // In cases where an item is fit to be meta-classified under both X and M, the proper order is 'MX'.

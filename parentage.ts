@@ -1,4 +1,4 @@
-import { TextBlock } from "./types";
+import { Paragraph, TextBlock } from "./types";
 
 export class ParentageUpbringing {
     Name: string;
@@ -15,12 +15,12 @@ export class ParentageUpbringing {
         this.Name = name;
         this.Page = page.toString();
         if (subtitle) {this.Subtitle = subtitle};
-        if (desc) {this.Description.push({type:'Paragraph',content:desc})};
+        if (desc) {this.Description.push(new Paragraph(desc))};
         return this;
     }
 
     desc(d:string) : this {
-        this.Description.push({type:'Paragraph',content:d});
+        this.Description.push(new Paragraph(d));
         return this;
     }
 

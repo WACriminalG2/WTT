@@ -1,4 +1,4 @@
-import {Ability, Alignment, CreatureSize, DamageType, DiceRoll, MagicItemCategory, Paragraph, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
+import {Ability, AbilityText, Alignment, CreatureSize, DamageType, DiceRoll, enblockify, MagicItemCategory, Paragraph, Rarity, Skill, TextBlock, TextList, WTTclass} from './types';
 import { ParentageUpbringing } from './parentage';
 import * as fs from 'fs';
 import { randomInt } from 'crypto';
@@ -103,7 +103,7 @@ export class Sourcebook {
      * Adds an array of Parentage objects to the sourcebook. See ParentageUpbringing() for a starting point to create them. These are distinct from player races, as they use a different ruleset for character creation. For more on that ruleset, see "An Elf and an Orc Had a Little Baby" by Adam Hancock and V.J. Harris.
      * @param p The array of parentages to be added.
      * @returns Sourcebook
-     * @experimental
+     * @alpha
      */
 
     parentages(p:ParentageUpbringing[]) : this {
@@ -120,7 +120,7 @@ export class Sourcebook {
      * Adds an array of Spell objects to the sourcebook. See Spell() for a starting point to create them. 
      * @param spellbook The array of spells to add.
      * @returns Sourcebook
-     * @experimental
+     * @alpha
      */
 
     cast(spellbook:Spell[]) : this {
@@ -176,9 +176,8 @@ export class Ware {
     Description?: TextBlock[] = [];
     Lore?: TextBlock[] = [];
     Classifications: WTTclass[] = []; //[AC420.69,BR549]
-    Category: 'Service' | 'Object' | 'Creature' = 'Object';
+    Category: string = 'Ware';
     Prices?: Price[] = [];
-    PriceModifiers?: PriceModifier[];
     Rarity?: Rarity;
     Page: string = ''; // 38, XI, V2p28, NA
     Weight?: number;
@@ -226,7 +225,7 @@ export class Ware {
      */
 
     desc(d: string | TextBlock ) : this {
-        if (d.toString() === d) {this.Description.push({type:'Paragraph',content:d});}
+        if (d.toString() === d) {this.Description.push(new Paragraph(d));}
         else {this.Description.push(<TextBlock> d)}
         return this;
     };
@@ -238,7 +237,7 @@ export class Ware {
      */
 
     lore(l: string) : this {
-        this.Lore.push({type:'Paragraph',content:l});
+        this.Lore.push(new Paragraph(l));
         return this;
     }
 
@@ -361,43 +360,6 @@ export class Ware {
         else {return `--`}
     }
 
-// Sub-type conversion methods
-/**
- * Converts a normal Ware to a SellableCreature (a subclass of Ware).
- * @returns SellableCreature
- */
-    creature() : SellableCreature {
-        this.Category = 'Creature';
-        return <SellableCreature> <unknown> this;
-    }
-
-    /**
-     * Converts a normal Ware to a Service (a subclass of Ware).
-     * @returns Service
-     */
-
-    service() : Service {
-        this.Category = 'Service';
-        return <Service> <unknown> this;
-    }
-
-    /**
-     * Converts a normal Ware to a Weapon (a subclass of Ware).
-     * @returns Weapon
-     */
-    weapon() : Weapon {
-        return <Weapon> <unknown> this;
-    }
-
-    /**
-     * Converts a normal Ware to an Armor (a subclass of Ware).
-     * @returns Armor
-     */
-
-    armor() : Armor {
-        return <Armor> <unknown> this;
-    }
-
 // Price-setting methods
 
 /**
@@ -417,6 +379,7 @@ export class Ware {
  * If this item provides advantage on any kind of roll, you may indicate that using this method.
  * @param s The type of roll this item provides advantage for.
  * @returns this
+ * @experimental
  */
     advantage(s:string) : this {
         this.Advantages.push(s);
@@ -426,6 +389,7 @@ export class Ware {
  * If this item provides disadvantage on any kind of roll, you may indicate that using this method.
  * @param s The type of roll this item provides disadvantage for.
  * @returns this
+ * @experimental
  */
     disadvantage(s:string) : this {
         this.Disadvantages.push(s);
@@ -440,6 +404,21 @@ export class Ware {
     citation() : string {
         return this.Shortform + this.Page;
     }
+
+    // Display methods
+
+    showcase() : HTMLElement {
+        let sc = document.createElement('div');
+        let header = document.createElement('h2');
+        header.innerText = this.Name;
+        sc.appendChild(header);
+
+        this.Description.forEach((block) => {
+            sc.appendChild(enblockify(block).render())
+        })
+
+        return sc;
+    }
 }
 
 export class Price {
@@ -448,8 +427,18 @@ export class Price {
     ep: number = 0;
     gp: number = 0;
     pp: number = 0;
-    Measure: string = ""; // 1 hr; 20 ft; 1 week
+    Measure: string = "";
+    Modifier?: string; // 1 hr; 20 ft; 1 week
 
+    /**
+     * Returns a new Price object.
+     * @param c The number of copper pieces in this price.
+     * @param s The number of silver pieces in this price.
+     * @param e The number of electrum pieces in this price.
+     * @param g The number of gold pieces in this price.
+     * @param p The number of platinum pieces in this price.
+     * @returns Price
+     */
     constructor(c?: number, s?: number, e?: number, g?: number, p?: number) {
         if (c) {this.cp = c;}
         if (s) {this.sp = s;}
@@ -458,7 +447,13 @@ export class Price {
         if (p) {this.pp = p;}
     }
 
-    // Auto-pricing intended for magical items, based on TheAngryGM's work here: https://theangrygm.com/how-to-price-an-item/
+    /**
+     * Auto-pricing intended for magical items, based on TheAngryGM's work here: {@link https://theangrygm.com/how-to-price-an-item/}
+     * @param rarity The item's rarity as a string. @options Common | Uncommon | Rare | Very Rare | Legendary | Artifact
+     * @param impact The item's degree of impact on the game. @options Major | Minor
+     * @param use How many times, or how frequently, the item may be used for its primary purpose. See TheAngryGM for more detail on these options. @options Single | Limited | Charged | Permanent
+     * @returns this
+     */
     autoprice(rarity:Rarity,impact:'Major'|'Minor',use:'Single'|'Limited'|'Charged'|'Permanent') : this {
 
         // Start by assuming common
@@ -522,36 +517,70 @@ export class Price {
         return this;
     }
 
+    /**
+     * Sets the number of copper pieces for this price.
+     * @param n The number of copper pieces.
+     * @returns this
+     */
     CP(n:number) : this {
         this.cp = n;
         return this;
     }
 
+    /**
+     * Sets the number of silver pieces for this price.
+     * @param n The number of silver pieces.
+     * @returns this
+     */
     SP(n:number) : this {
         this.sp = n;
         return this;
     }
 
+    /**
+     * Sets the number of electrum pieces for this price.
+     * @param n The number of electrum pieces.
+     * @returns this
+     */
     EP(n:number) : this {
         this.ep = n;
         return this;
     }
-
+    /**
+     * Sets the number of gold pieces for this price.
+     * @param n The number of gold pieces.
+     * @returns this
+     */
     GP(n:number) : this {
         this.gp = n;
         return this;
     }
-
+    /**
+     * Sets the number of platinum pieces for this price.
+     * @param n The number of platinum pieces.
+     * @returns this
+     */
     PP(n:number) : this {
         this.pp = n;
         return this;
     }
 
+    /**
+     * Sets the unit of measure for this price.
+     * @param m The unit of measure, as a string.
+     * @returns this
+     * @example measure('day')
+     * @example measure('dozen')
+     */
     measure(m:string) : this {
         this.Measure = m;
         return this;
     }
 
+    /**
+     * Converts this price object to a readable string.
+     * @returns string
+     */
     out() : string {
         let arr : string[] = [];
         if (this.pp > 0) {arr.push(this.pp + "pp")}
@@ -567,17 +596,17 @@ export class Price {
         }
         return x
     }
-};
 
-export class PriceModifier {
-    Modifier: string; // x2 ; +5 gp
-    Circumstance: string; // In the summer; Over the weekend; In a mountain range; On short notice; During a drought; In bulk
-
-    constructor(m:string,c:string) {
-        this.Modifier = m;
-        this.Circumstance = c;
+    /**
+     * Sets a modifier for this price in addition to the weight and/or measure. For instance, an item may be more or less expensive in an urban setting, or at a particular time of year.
+     * @param modifier The circumstances under which this price applies.
+     * @returns this
+     */
+    modify(modifier:string) : this {
+        this.Modifier = modifier;
+        return this;
     }
-}
+};
 
 export class Roll {
     d4: number = 0;
@@ -592,7 +621,21 @@ export class Roll {
     adv: boolean = false;
     disadv: boolean = false;
 
-    constructor(d4?:number,d6?:number,d8?:number,d10?:number,d12?:number,d20?:number,d100?:number,mod?:number,adv?:'Advantage'|'Disadvantage',mult?:number) {
+    /**
+     * Creates a new Roll object.
+     * @param d4 The number of d4 for this roll.
+     * @param d6 The number of d6 for this roll.
+     * @param d8 The number of d8 for this roll.
+     * @param d10 The number of d10 for this roll.
+     * @param d12 The number of d12 for this roll.
+     * @param d20 The number of d20 for this roll.
+     * @param d100 The number of d100 for this roll.
+     * @param mod A fixed modifier added to the roll.
+     * @param adv Whether this roll is being made at advantage or disadvantage.
+     * @param mult A fixed multiplier applied to the roll after its result.
+     * @returns Roll
+     */
+    constructor(d4?:number,d6?:number,d8?:number,d10?:number,d12?:number,d20?:number,d100?:number,mod?:number,adv?:'Advantage'|'Disadvantage'|'None',mult?:number) {
         if(d4){this.d4 = d4};
         if(d6){this.d6 = d6};
         if(d8){this.d8 = d8};
@@ -613,61 +656,118 @@ export class Roll {
         return this;
     }
 
+    /**
+     * Adds or subtracts d4 to the roll.
+     * @param d The number of d4 to add/subtract.
+     * @returns this
+     */
     D4 (d?:number) : this {
         if(d){this.d4 += d} else {this.d4 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d6 to the roll.
+     * @param d The number of d6 to add/subtract.
+     * @returns this
+     */
     D6 (d?:number) : this {
         if(d){this.d6 += d} else {this.d6 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d8 to the roll.
+     * @param d The number of d8 to add/subtract.
+     * @returns this
+     */
     D8 (d?:number) : this {
         if(d) {this.d8 += d} else {this.d8 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d10 to the roll.
+     * @param d The number of d10 to add/subtract.
+     * @returns this
+     */
     D10 (d?:number) : this {
         if(d) {this.d10 += d} else {this.d10 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d12 to the roll.
+     * @param d The number of d12 to add/subtract.
+     * @returns this
+     */
     D12 (d?:number) : this {
         if(d) {this.d12 += d} else {this.d12 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d20 to the roll.
+     * @param d The number of d20 to add/subtract.
+     * @returns this
+     */
     D20 (d?:number) : this {
         if(d) {this.d20 += d} else {this.d20 += 1};
         return this;
     }
 
+    /**
+     * Adds or subtracts d100 to the roll.
+     * @param d The number of d100 to add/subtract.
+     * @returns this
+     */
     D100 (d?:number) : this {
         if(d) {this.d100 += d} else {this.d100 += 1};
         return this;
     }
 
+    /**
+     * Alters the flat modifier for this roll.
+     * @param m The number to add or subtract to the roll's current modifier.
+     * @returns this
+     */
     MOD (m:number) : this {
         this.mod += m;
         return this;
     }
 
+    /**
+     * Grants advantage on this roll.
+     * @returns this
+     */
     ADV () : this {
         this.adv = true;
         return this;
     }
 
+    /**
+     * Grants disadvantage on this roll.
+     * @returns this
+     */
     DISADV () : this {
         this.disadv = true;
         return this;
     }
 
+    /**
+     * Sets the multiplier for this roll.
+     * @param m The multiplier to set.
+     * @returns this
+     */
     MULTIPLY (m:number) : this {
         this.multiplier = m;
         return this;
     }
 
+    /**
+     * Converts the roll object into a readable string with standard XdY notation.
+     * @returns string
+     */
     out() : string {
         let arr : string[] = [];
         if (this.d4 != 0) {arr.push(this.d4.toString()+"d4")};
@@ -695,6 +795,10 @@ export class Roll {
         return S;
     }
 
+    /**
+     * Helper function to determine whether the final roll is made at advantage/disadvantage.
+     * @returns 'D' | 'A' | 'Standard'
+     */
     pool() : 'D' | 'A' | 'Standard' { 
         // Determines whether the roll is at advantage or disadvantage. Helper method for result().
         if (this.adv === this.disadv) {return 'Standard'}
@@ -702,6 +806,11 @@ export class Roll {
         else if (this.disadv) {return 'D'}
     }
 
+    /**
+     * Rolls these dice and provides the result as a number or number[].
+     * @param mode If provided as 'detail', will output an array of each die's value instead of the aggregated result.
+     * @returns number or number[]
+     */
     result(mode?: 'detail') : number | number[] {
         
         let pool = this.pool();
@@ -767,6 +876,11 @@ export class Roll {
         }
     }
 
+    /**
+     * Helper function for result(). Prefer to use result().
+     * @param mode If provided as 'detail', will output an array of each die's value instead of the aggregated result.
+     * @returns number or number[]
+     */
     roll(mode?:'detail') : number | number[] {
 
         // This method does NOT take into account advantage, mods, or multipliers. For those, use result().
@@ -833,7 +947,7 @@ export class Roll {
         }
     }
 
-    // Methods still needed: keep()
+    // Methods or functionality still needed: keep()
 }
 
 // Ware sub-classes
@@ -847,6 +961,7 @@ export class Armor extends Ware {
     constructor(n:string,p:string,at?:Armor["ArmorType"]) {
         super(n,p);
         if (at) {this.ArmorType=at};
+        this.Category = 'Armor';
         return this;
     }
 
@@ -889,6 +1004,7 @@ export class Container extends Ware {
     constructor(n:string,p:string,c:string) {
         super(n,p);
         this.Capacity=c;
+        this.Category='Container';
         return this;
     }
 
@@ -1079,6 +1195,7 @@ export class Mount extends SellableCreature {
     constructor(n:string,p:string,c:number) {
         super(n,p);
         this.CarryCapacity = {Weight:c,Measure:'lb.'};
+        this.Category = 'Mount';
         return this;
     }
 
@@ -1101,6 +1218,7 @@ export class Shield extends Armor {
 
     constructor(n:string,p:string) {
         super(n,p,'Shield');
+        this.Category = 'Shield';
         return this;
     }
 
@@ -1132,6 +1250,7 @@ export class Weapon extends Ware {
 
     constructor(t:string,p:string) {
         super(t,p);
+        this.Category = 'Weapon';
         return this;
     }
 
@@ -1258,6 +1377,29 @@ export function PP(n:number) : Price {
     return new Price(0,0,0,0,n)
 }
 
+/**
+ * Takes an object which has been read from file and reassigns it to the appropriate data type, so that its member methods are available again.
+ * @param obj The object to reconstitute.
+ * @returns Ware or a Ware-extending class.
+ */
+export function reconstitute(obj:any) : any {
+    let x;
+
+    switch (obj.Category) {
+        case 'Ware': {x = new Ware(''); Object.assign(x,obj); break;}
+        case 'Container': {x = new Container('','',''); Object.assign(x,obj); break;}
+        case 'Weapon': {x = new Weapon('',''); Object.assign(x,obj); break;}
+        case 'Armor': {x = new Armor('',''); Object.assign(x,obj); break;}
+        case 'Shield': {x = new Shield('',''); Object.assign(x,obj); break;}
+        case 'Creature': {x = new SellableCreature('',''); Object.assign(x,obj); break;}
+        case 'Mount': {x = new Mount('','',0); Object.assign(x,obj); break;}
+        case 'Service': {x = new Service('',''); Object.assign(x,obj); break;}
+        default: {x = new Ware(''); Object.assign(x,obj); break;}
+    }
+
+    return x;
+}
+
 // Experimental bullshit
 
 export class Generator {
@@ -1308,7 +1450,7 @@ export class Spell {
     }
 
     AHL(t:string) : this {
-        this.Description.push({type:'Ability',content:{name:'At Higher Levels',text:t}});
+        this.Description.push(new AbilityText('At Higher Levels',t));
         return this;
     }
 
@@ -1323,7 +1465,7 @@ export class Spell {
     }
 
     desc(d:string) : this {
-        this.Description.push({type: 'Paragraph',content:d});
+        this.Description.push(new Paragraph(d));
         return this;
     }
 
@@ -1382,4 +1524,6 @@ export class Spell {
         return this;
     }
 }
+
+
 

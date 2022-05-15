@@ -42,9 +42,9 @@ new Weapon('Shortbow','').classify('WR0').sell(GP(25)).dmg(6).dmgtype('Piercing'
 new Weapon('Sling','').classify('WR').sell(SP(1)).dmg(4,'Bludgeoning').ammunition('30/120').simple(),
 new Weapon('Spear', '').classify('WP').sell(GP(1)).dmg(6).dmgtype('Piercing').lb(3).thrown('20/60').versatile(8).simple(),
 new Weapon('Trident','').classify('WP').sell(GP(5)).dmg(6,'Piercing').lb(4).thrown('20/60').versatile(8).martial(),
-new Weapon('War Pick','').classify('WZ').sell(GP(5)).dmg(8,'Piercing').lb(2).martial(),
+new Weapon('War Pick','').classify('WL').sell(GP(5)).dmg(8,'Piercing').lb(2).martial(),
 new Weapon('Warhammer','').classify('WH').sell(GP(15)).dmg(8,'Bludgeoning').lb(2).versatile(10).martial(),
-new Weapon('Whip','').classify('WZ').sell(GP(2)).dmg(4,'Slashing').lb(3).finesse().reach().martial(),
+new Weapon('Whip','').classify('WL').sell(GP(2)).dmg(4,'Slashing').lb(3).finesse().reach().martial(),
 
 new Weapon('Crystal',"").sell(10).lb(1).desc('Suitable for use as an Arcane Focus.').classify("WF0"),
 new Weapon('Orb','').sell(20).lb(3).desc('Suitable for use as an Arcane Focus.').classify("WF0"),
@@ -276,14 +276,12 @@ let expenses = [
     new Ware('Wealthy Lifestyle','').sell(GP(4).measure('day')).classify('SL').desc("Choosing a wealthy lifestyle means living a life of luxury, though you might not have achieved the social status associated with the old money of nobility or royalty. You live a lifestyle comparable to that of a highly successful merchant, a favored servant of the royalty, or the owner of a few small businesses. You have respectable lodgings, usually a spacious home in a good part of town or a comfortable suite at a fine inn. You likely have a small staff of servants."),
     new Ware('Aristocratic Lifestyle','').sell(GP(10).measure('day')).classify('SL').desc("You live a life of plenty and comfort. You move in circles populated by the most powerful people in the community. You have excellent lodgings, perhaps a townhouse in the nicest part of town or rooms in the finest inn. You dine at the best restaurants, retain the most skilled and fashionable tailor, and have servants attending to your every need. You receive invitations to the social gatherings of the rich and powerful, and spend evenings in the company of politicians, guild leaders, high priests, and nobility. You must also contend with the highest levels of deceit and treachery. The wealthier you are, the greater the chance you will be drawn into political intrigue as a pawn or participant."),
 
-    new Ware('Inn Stay (per day)','').sell(CP(7).measure('Squalid')).sell(SP(1).measure('Poor')).sell(SP(5).measure('Modest')).sell(SP(8).measure('Comfortable')).sell(GP(2).measure('Wealthy')).sell(GP(4).measure('Aristocratic')).classify('SL'),
-    new Ware('Meals (per day)','').sell(CP(3).measure('Squalid')).sell(CP(6).measure('Poor')).sell(SP(3).measure('Modest')).sell(SP(5).measure('Comfortable')).sell(SP(8).measure('Wealthy')).sell(GP(2).measure('Aristocratic')).classify('SL'),
+    new Ware('Inn Stay','').sell(CP(7).measure('day').modify('Squalid')).sell(SP(1).modify('Poor').measure('day')).sell(SP(5).modify('Modest').measure('day')).sell(SP(8).modify('Comfortable').measure('day')).sell(GP(2).modify('Wealthy').measure('day')).sell(GP(4).modify('Aristocratic').measure('day')).classify('SL'),
+    new Ware('Meals','').sell(CP(3).modify('Squalid').measure('day')).sell(CP(6).modify('Poor').measure('day')).sell(SP(3).modify('Modest').measure('day')).sell(SP(5).modify('Comfortable').measure('day')).sell(SP(8).modify('Wealthy').measure('day')).sell(GP(2).modify('Aristocratic').measure('day')).classify('SL'),
 
-    new Ware('Coach cab between towns','').sell(CP(3).measure('mile')).classify('SV'),
-    new Ware('Coach cab within a city','').sell(CP(1)).classify('SV'),
+    new Ware('Coach cab','').sell(CP(3).measure('mile').modify('Between towns')).sell(CP(1).modify('Within a city')).classify('SV'),
 
-    new Ware('Hireling, skilled','').sell(GP(2).measure('day')).classify('S'),
-    new Ware('Hireling, untrained','').sell(SP(2).measure('day')).classify('S'),
+    new Ware('Hireling','').sell(GP(2).measure('day').modify('Skilled')).sell(SP(2).measure('day').modify('Untrained')).classify('S'),
     new Ware('Messenger','').sell(CP(2).measure('mile')).classify('S'),
     new Ware('Road or gate toll','').sell(CP(1)).classify('SV'),
     new Ware("Ship's passage",'').sell(SP(1).measure('mile')).classify('SV')
